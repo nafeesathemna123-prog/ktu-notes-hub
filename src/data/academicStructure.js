@@ -11,7 +11,7 @@
  * 4. BCA: S1
  * 5. BBA: S1
  * 6. MBA: S1
- * 7. ECE: S1
+ * 7. B.Tech ECE: S1
  */
 
 export const INITIAL_PROGRAMMES = [
@@ -184,10 +184,10 @@ export const INITIAL_PROGRAMMES = [
     ],
   },
   {
-    id: 'ece',
+    id: 'btech-ece',
     code: 'ECE',
-    name: 'ECE',
-    fullName: 'Electronics & Communication Engineering',
+    name: 'B.Tech ECE',
+    fullName: 'Electronics and Communication Engineering',
     degreeType: 'B.Tech',
     scheme: 'KTU 2024 Scheme',
     iconName: 'Radio',
@@ -195,7 +195,7 @@ export const INITIAL_PROGRAMMES = [
     isActive: true,
     availableSemesters: [
       {
-        id: 'ece-s1',
+        id: 'btech-ece-s1',
         semesterNumber: 1,
         title: 'Semester 1',
         phase: 'First Year',

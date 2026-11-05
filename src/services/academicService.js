@@ -24,11 +24,15 @@ export const academicService = {
             name,
             full_name,
             degree_type,
-            scheme,
+            scheme_id,
             description,
             icon_name,
             is_active,
             sort_order,
+            schemes (
+              id,
+              name
+            ),
             programme_semesters (
               id,
               semester_number,
@@ -50,7 +54,8 @@ export const academicService = {
             name: prog.name,
             fullName: prog.full_name,
             degreeType: prog.degree_type,
-            scheme: prog.scheme,
+            schemeId: prog.scheme_id,
+            scheme: prog.schemes?.name || (prog.scheme_id === 'univ-general' ? 'University Curriculum' : 'KTU 2024 Scheme'),
             iconName: prog.icon_name,
             description: prog.description,
             isActive: prog.is_active,

@@ -54,7 +54,7 @@ export function AboutSection() {
                 <strong>KTU Notes Hub</strong> provides a single, trusted destination for curriculum-aligned lecture notes and exam revision material for our college community.
               </p>
               <p>
-                Rather than cluttering students with irrelevant branches, this platform is tailored exclusively to our college's active programmes: <strong>B.Tech AI & DS, B.Tech CSE, B.Tech CSBS, BCA, BBA, MBA, and ECE</strong>.
+                Rather than cluttering students with irrelevant branches, this platform is tailored exclusively to our college's active programmes: <strong>B.Tech AI & DS, B.Tech CSE, B.Tech CSBS, BCA, BBA, MBA, and B.Tech ECE</strong>.
               </p>
               <p>
                 As batches advance, the system enables administrators to dynamically activate subsequent semesters and publish verified subjects without code changes. Public students enjoy frictionless, account-free access at all times.

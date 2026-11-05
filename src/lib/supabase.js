@@ -1,13 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabasePublishableKey =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&
-  supabaseAnonKey &&
+  supabasePublishableKey &&
   supabaseUrl !== 'https://your-project-id.supabase.co' &&
-  !supabaseUrl.includes('your-project-id')
+  !supabaseUrl.includes('your-project-id') &&
+  supabasePublishableKey !== 'your-publishable-key-here' &&
+  !supabasePublishableKey.includes('your-publishable-key')
 );
 
 /**
@@ -16,7 +20,7 @@ export const isSupabaseConfigured = Boolean(
  * allowing the application to run seamlessly on local verified data.
  */
 export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+  ? createClient(supabaseUrl, supabasePublishableKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,

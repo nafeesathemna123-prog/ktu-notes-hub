@@ -83,7 +83,7 @@ export function Footer({ onAdminClick, onBrowseClick }) {
               <li>BCA (S1)</li>
               <li>BBA (S1)</li>
               <li>MBA (S1)</li>
-              <li>ECE (S1)</li>
+              <li>B.Tech ECE (S1)</li>
             </ul>
           </div>
 

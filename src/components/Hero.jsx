@@ -24,7 +24,7 @@ export function Hero({ onSearchSubmit, onBrowseClick }) {
     'BCA',
     'BBA',
     'MBA',
-    'ECE',
+    'B.Tech ECE',
   ];
 
   return (
@@ -148,7 +148,7 @@ export function Hero({ onSearchSubmit, onBrowseClick }) {
                     7 College Programmes
                   </h3>
                   <p className="text-xs text-[#475569] leading-relaxed">
-                    Dedicated archives for B.Tech AI & DS, CSE, CSBS, ECE, BCA, BBA, and MBA.
+                    Dedicated archives for B.Tech AI & DS, B.Tech CSE, B.Tech CSBS, B.Tech ECE, BCA, BBA, and MBA.
                   </p>
                 </div>
               </div>
