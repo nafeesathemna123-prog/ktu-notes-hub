@@ -1,7 +1,7 @@
 import { BookOpen, Shield } from 'lucide-react';
 
 export function Footer({ onAdminClick, onBrowseClick }) {
-  const currentYear = 2026;
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-white border-t border-[#DCE5EF] pt-16 pb-12 transition-all">
@@ -13,21 +13,21 @@ export function Footer({ onAdminClick, onBrowseClick }) {
           {/* Brand Info (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#243B53] flex items-center justify-center text-white">
-                <BookOpen className="w-5 h-5 text-[#F8F5ED]" />
+              <div className="w-9 h-9 rounded-xl bg-[#243B53] flex items-center justify-center text-white shadow-2xs">
+                <BookOpen className="w-5 h-5 text-[#B49A70]" />
               </div>
               <span className="font-heading font-bold text-lg text-[#243B53] tracking-tight">
-                KTU Notes Hub
+                KMCT Notes Hub
               </span>
             </div>
 
             <p className="text-xs text-[#475569] leading-relaxed max-w-sm">
-              A centralised academic notes repository tailored exclusively to our college programmes under APJ Abdul Kalam Technological University and affiliated curricula. Free public access for all enrolled students.
+              A centralised academic notes repository tailored exclusively to our college programmes. Free, frictionless public access for all enrolled students.
             </p>
 
             <div className="pt-2">
               <span className="inline-flex items-center gap-1.5 text-xs text-[#243B53] font-medium bg-[#EAF0F6] px-3 py-1 rounded-full border border-[#DCE5EF]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#243B53]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B49A70]" />
                 7 Active Programmes • 11 Semesters
               </span>
             </div>
@@ -50,7 +50,7 @@ export function Footer({ onAdminClick, onBrowseClick }) {
                   onClick={onBrowseClick}
                   className="hover:text-[#243B53] transition-colors text-left cursor-pointer"
                 >
-                  Browse Notes
+                  Browse Notes Library
                 </button>
               </li>
               <li>
@@ -71,26 +71,26 @@ export function Footer({ onAdminClick, onBrowseClick }) {
             </ul>
           </div>
 
-          {/* College Active Programmes */}
+          {/* College Active Programmes (Strict Approved Order) */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-sm text-[#243B53] tracking-wide uppercase">
               Programmes
             </h4>
             <ul className="space-y-2 text-xs text-[#475569]">
-              <li>B.Tech AI & DS (S1–S3)</li>
-              <li>B.Tech CSE (S1–S3)</li>
-              <li>B.Tech CSBS (S1)</li>
-              <li>BCA (S1)</li>
-              <li>BBA (S1)</li>
-              <li>MBA (S1)</li>
-              <li>B.Tech ECE (S1)</li>
+              <li>1. B.Tech AI & DS (S1–S3)</li>
+              <li>2. B.Tech CSE (S1–S3)</li>
+              <li>3. B.Tech CSBS (S1)</li>
+              <li>4. B.Tech ECE (S1)</li>
+              <li>5. BCA (S1)</li>
+              <li>6. BBA (S1)</li>
+              <li>7. MBA (S1)</li>
             </ul>
           </div>
 
-          {/* Semesters & Governance */}
+          {/* Platform & Access Governance */}
           <div className="space-y-3">
             <h4 className="font-heading font-bold text-sm text-[#243B53] tracking-wide uppercase">
-              Platform & Access
+              Access & Governance
             </h4>
             <ul className="space-y-2 text-xs text-[#475569]">
               <li>
@@ -100,15 +100,15 @@ export function Footer({ onAdminClick, onBrowseClick }) {
                 <span className="text-[#303846] font-medium">Curriculum:</span> College Active Batches
               </li>
               <li>
-                <span className="text-[#303846] font-medium">Dynamic Admin:</span> Supabase Architecture Ready
+                <span className="text-[#303846] font-medium">Format:</span> Clean PDF Documents
               </li>
               <li className="pt-2">
                 <button
                   type="button"
                   onClick={onAdminClick}
-                  className="inline-flex items-center gap-1.5 text-xs text-[#243B53] hover:text-[#1A2B3C] font-semibold underline underline-offset-4 decoration-[#DCE5EF] hover:decoration-[#243B53] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#243B53] hover:text-[#1A2B3C] font-semibold underline underline-offset-4 decoration-[#DCE5EF] hover:decoration-[#B49A70] transition-colors cursor-pointer"
                 >
-                  <Shield className="w-3.5 h-3.5" />
+                  <Shield className="w-3.5 h-3.5 text-[#B49A70]" />
                   <span>Administrator Portal</span>
                 </button>
               </li>
@@ -120,10 +120,10 @@ export function Footer({ onAdminClick, onBrowseClick }) {
         {/* Legal Disclaimer & Copyright */}
         <div className="pt-8 border-t border-[#DCE5EF] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#475569]">
           <p>
-            © {currentYear} KTU Notes Hub. Tailored for College Academic Programmes.
+            © {currentYear} KMCT Notes Hub. Tailored for College Academic Programmes.
           </p>
           <p className="text-center md:text-right max-w-lg text-[11px] text-[#475569]/80">
-            Disclaimer: KTU Notes Hub is an independent academic resource library. All course syllabus names and university designations refer to respective university bodies.
+            Disclaimer: KMCT Notes Hub is an independent academic resource library for our college programmes. All course syllabus names and university designations refer to respective university bodies.
           </p>
         </div>
 

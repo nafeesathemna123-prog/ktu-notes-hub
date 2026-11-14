@@ -1,33 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './context/useAuth';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { DepartmentSection } from './components/DepartmentSection';
 import { SemesterSection } from './components/SemesterSection';
 import { AboutSection } from './components/AboutSection';
 import { Footer } from './components/Footer';
-import { Modal } from './components/Modal';
-import { BookOpen, Shield, GraduationCap, CheckCircle2 } from 'lucide-react';
+import { NotesExplorer } from './components/NotesExplorer';
+import { AdminLoginModal } from './components/admin/AdminLoginModal';
 
-function App() {
+const AdminDashboard = lazy(() =>
+  import('./components/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard }))
+);
+
+function AppContent() {
+  const { isAdmin } = useAuth();
+  const [currentView, setCurrentView] = useState('home'); // 'home' | 'browse' | 'admin'
   const [selectedProgrammeId, setSelectedProgrammeId] = useState('btech-aids');
-  const [browseModalOpen, setBrowseModalOpen] = useState(false);
+  const [selectedSemesterNumber, setSelectedSemesterNumber] = useState(1);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
-  const [selectedEntity, setSelectedEntity] = useState(null);
-  const [searchFeedback, setSearchFeedback] = useState(null);
+
+  // Sync hash routing
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#admin') {
+        if (isAdmin) {
+          setCurrentView('admin');
+        } else {
+          setAdminModalOpen(true);
+        }
+      } else if (hash.startsWith('#browse')) {
+        setCurrentView('browse');
+      } else if (hash === '#home' || hash === '') {
+        setCurrentView('home');
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [isAdmin]);
+
+  const navigateTo = (view, hash = '') => {
+    setCurrentView(view);
+    if (hash) {
+      window.location.hash = hash;
+    } else if (view === 'browse') {
+      window.location.hash = '#browse';
+    } else if (view === 'admin') {
+      window.location.hash = '#admin';
+    } else {
+      window.location.hash = '#home';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleBrowseNotes = () => {
-    setSearchFeedback(null);
-    setBrowseModalOpen(true);
+    navigateTo('browse');
   };
 
-  const handleSearchSubmit = (query) => {
-    if (!query || !query.trim()) return;
-    setSearchFeedback(query.trim());
-    setBrowseModalOpen(true);
-  };
-
-  const handleAdminPortal = () => {
-    setAdminModalOpen(true);
+  const handleSearchSubmit = () => {
+    navigateTo('browse');
   };
 
   const handleProgrammeSelect = (dept) => {
@@ -35,134 +70,105 @@ function App() {
   };
 
   const handleSemesterSelect = (sem) => {
-    setSelectedEntity({
-      type: 'semester',
-      title: `${sem.programmeName} — ${sem.title} (${sem.phase})`,
-      subtitle: `${sem.programmeScheme} • ${sem.focus}`,
-      description: sem.description,
-      note: 'Verified notes, module files, and PDF materials for this active semester are being curated by administrators. Direct access and downloads will be enabled in Phase 2.',
-    });
+    setSelectedProgrammeId(sem.programmeId || selectedProgrammeId);
+    setSelectedSemesterNumber(sem.semesterNumber);
+    navigateTo('browse');
   };
+
+  const handleAdminPortalClick = () => {
+    if (isAdmin) {
+      navigateTo('admin');
+    } else {
+      setAdminModalOpen(true);
+    }
+  };
+
+  const handleAdminLoginSuccess = () => {
+    navigateTo('admin');
+  };
+
+  // If in admin view and user is an administrator
+  if (currentView === 'admin' && isAdmin) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-[#F8F5ED] flex items-center justify-center">
+            <div className="w-8 h-8 border-3 border-[#243B53] border-t-transparent rounded-full animate-spin" />
+          </div>
+        }
+      >
+        <AdminDashboard onExit={() => navigateTo('home')} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F5ED] text-[#303846] flex flex-col selection:bg-[#DCE5EF] selection:text-[#243B53]">
+      
       {/* Top Navigation */}
       <Navbar
         onBrowseClick={handleBrowseNotes}
+        onAdminClick={handleAdminPortalClick}
+        onOpenAdminDashboard={() => navigateTo('admin')}
       />
 
       {/* Main Content Area */}
       <main className="flex-grow">
-        {/* Hero Section */}
-        <Hero
-          onSearchSubmit={handleSearchSubmit}
-          onBrowseClick={handleBrowseNotes}
-        />
+        {currentView === 'browse' ? (
+          <NotesExplorer
+            initialProgrammeId={selectedProgrammeId}
+            initialSemesterNumber={selectedSemesterNumber}
+            onBackToHome={() => navigateTo('home')}
+          />
+        ) : (
+          <>
+            {/* Hero Section */}
+            <Hero
+              onSearchSubmit={handleSearchSubmit}
+              onBrowseClick={handleBrowseNotes}
+            />
 
-        {/* Browse by Programme (College's 7 Active Courses) */}
-        <DepartmentSection
-          selectedProgrammeId={selectedProgrammeId}
-          onProgrammeSelect={handleProgrammeSelect}
-        />
+            {/* Browse by Programme (College's 7 Active Courses in Approved Order) */}
+            <DepartmentSection
+              selectedProgrammeId={selectedProgrammeId}
+              onProgrammeSelect={handleProgrammeSelect}
+            />
 
-        {/* Browse by Semester (Shows ONLY the semesters available under selected programme) */}
-        <SemesterSection
-          selectedProgrammeId={selectedProgrammeId}
-          onProgrammeChange={setSelectedProgrammeId}
-          onSemesterSelect={handleSemesterSelect}
-        />
+            {/* Browse by Semester (Shows ONLY the semesters available under selected programme) */}
+            <SemesterSection
+              selectedProgrammeId={selectedProgrammeId}
+              onProgrammeChange={setSelectedProgrammeId}
+              onSemesterSelect={handleSemesterSelect}
+            />
 
-        {/* About Section */}
-        <AboutSection />
+            {/* About Section */}
+            <AboutSection />
+          </>
+        )}
       </main>
 
       {/* Footer */}
       <Footer
-        onAdminClick={handleAdminPortal}
+        onAdminClick={handleAdminPortalClick}
         onBrowseClick={handleBrowseNotes}
       />
 
-      {/* Browse Notes / Search Modal (Phase 1 Notice) */}
-      <Modal
-        isOpen={browseModalOpen}
-        onClose={() => setBrowseModalOpen(false)}
-        title={searchFeedback ? `Search: "${searchFeedback}"` : "Student Notes Library"}
-        subtitle="Phase 1 Active • Phase 2 Coming Next"
-        icon={BookOpen}
-      >
-        <div className="space-y-3">
-          <p>
-            {searchFeedback ? (
-              <span>
-                Searching for <strong>&ldquo;{searchFeedback}&rdquo;</strong> across the college academic library.
-              </span>
-            ) : (
-              <span>
-                Welcome to the KTU Notes Hub central repository.
-              </span>
-            )}
-          </p>
-          <div className="p-3.5 rounded-xl bg-[#EAF0F6] border border-[#DCE5EF] text-xs space-y-1.5">
-            <div className="font-heading font-semibold text-[#243B53] flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>College Scope: 7 Programmes & 11 Semesters Configured</span>
-            </div>
-            <p className="text-[#475569]">
-              In Phase 2, the dedicated public Browse Notes page will provide live subject search, multi-level filters (Programme, Semester, Subject, Module), in-browser PDF viewing, and direct downloads.
-            </p>
-          </div>
-          <p className="text-xs text-[#475569]">
-            Remember: Students enjoy 100% free access without accounts, profiles, or login credentials.
-          </p>
-        </div>
-      </Modal>
-
-      {/* Admin Portal Modal */}
-      <Modal
+      {/* Admin Login Modal */}
+      <AdminLoginModal
         isOpen={adminModalOpen}
         onClose={() => setAdminModalOpen(false)}
-        title="Administrator Portal"
-        subtitle="Restricted Academic Management Access"
-        icon={Shield}
-      >
-        <div className="space-y-3">
-          <p>
-            This portal is strictly reserved for authorized administrators to upload, manage, edit, and publish verified academic notes for our college students.
-          </p>
-          <div className="p-3.5 rounded-xl bg-[#F0F2F5] border border-[#DCE5EF] text-xs space-y-1.5">
-            <span className="font-heading font-semibold text-[#243B53] block">
-              Dynamic Architecture Ready:
-            </span>
-            <p className="text-[#475569]">
-              The backend architecture supports adding new courses, activating higher semesters, and uploading PDF notes via Supabase. Admin login and dashboard controls will be implemented in Phase 3 and connected to Supabase RLS in Phase 4.
-            </p>
-          </div>
-        </div>
-      </Modal>
+        onSuccess={handleAdminLoginSuccess}
+      />
 
-      {/* Selected Semester Modal */}
-      <Modal
-        isOpen={!!selectedEntity}
-        onClose={() => setSelectedEntity(null)}
-        title={selectedEntity?.title || ''}
-        subtitle={selectedEntity?.subtitle || ''}
-        icon={selectedEntity?.type === 'semester' ? GraduationCap : BookOpen}
-      >
-        <div className="space-y-3">
-          <p className="text-sm text-[#303846]">
-            {selectedEntity?.description}
-          </p>
-          <div className="p-3.5 rounded-xl bg-[#EAF0F6] border border-[#DCE5EF] text-xs">
-            <span className="font-heading font-semibold text-[#243B53] block mb-1">
-              Curriculum Note:
-            </span>
-            <p className="text-[#475569]">
-              {selectedEntity?.note}
-            </p>
-          </div>
-        </div>
-      </Modal>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

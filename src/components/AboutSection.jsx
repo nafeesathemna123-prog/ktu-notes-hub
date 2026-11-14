@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   BookOpenCheck,
   ShieldCheck,
@@ -11,7 +12,7 @@ export function AboutSection() {
       icon: ShieldCheck,
       title: '100% Free Public Access',
       description:
-        'No student accounts, registrations, or login requirements. Every student gets immediate access to academic materials.',
+        'No student accounts, registrations, or login requirements. Every student enjoys instant access to academic materials.',
     },
     {
       icon: BookOpenCheck,
@@ -29,7 +30,7 @@ export function AboutSection() {
       icon: Sparkles,
       title: 'Dynamic Administrator Curation',
       description:
-        'Higher semesters, courses, and subjects are activated dynamically by administrators as batches progress.',
+        'Higher semesters, courses, and subjects are activated dynamically by college administrators as batches progress.',
     },
   ];
 
@@ -42,22 +43,22 @@ export function AboutSection() {
           
           {/* Left Column: Purpose & Narrative */}
           <div className="lg:col-span-5">
-            <span className="text-xs font-heading font-semibold tracking-wider text-[#475569] uppercase block mb-2">
+            <span className="text-xs font-heading font-semibold tracking-wider text-[#B49A70] uppercase block mb-2">
               About the Platform
             </span>
             <h2 className="font-heading font-bold text-3xl sm:text-4xl text-[#243B53] tracking-tight leading-tight mb-6">
               A Tailored Academic Archive for Our College
             </h2>
             
-            <div className="space-y-4 text-base text-[#303846] leading-relaxed">
+            <div className="space-y-4 text-base text-[#303846] leading-relaxed font-sans">
               <p>
-                <strong>KTU Notes Hub</strong> provides a single, trusted destination for curriculum-aligned lecture notes and exam revision material for our college community.
+                <strong>KMCT Notes Hub</strong> provides a single, trusted destination for curriculum-aligned lecture notes, problem sets, and exam revision materials for our college community.
               </p>
               <p>
-                Rather than cluttering students with irrelevant branches, this platform is tailored exclusively to our college's active programmes: <strong>B.Tech AI & DS, B.Tech CSE, B.Tech CSBS, BCA, BBA, MBA, and B.Tech ECE</strong>.
+                Rather than cluttering students with irrelevant branches, this platform is tailored exclusively to our college's active programmes: <strong>B.Tech AI & DS, B.Tech CSE, B.Tech CSBS, B.Tech ECE, BCA, BBA, and MBA</strong>.
               </p>
               <p>
-                As batches advance, the system enables administrators to dynamically activate subsequent semesters and publish verified subjects without code changes. Public students enjoy frictionless, account-free access at all times.
+                As batches advance, the system enables administrators to dynamically activate subsequent semesters and publish verified subjects through Supabase. Students enjoy frictionless, account-free public access at all times.
               </p>
             </div>
 
@@ -77,7 +78,7 @@ export function AboutSection() {
               </div>
               <div className="w-px h-10 bg-[#DCE5EF]" />
               <div>
-                <span className="font-heading font-bold text-2xl text-[#243B53] block">
+                <span className="font-heading font-bold text-2xl text-[#B49A70] block">
                   100%
                 </span>
                 <span className="text-xs text-[#475569]">Public Access</span>
@@ -90,12 +91,14 @@ export function AboutSection() {
             {highlights.map((item, idx) => {
               const IconComp = item.icon;
               return (
-                <div
+                <motion.div
                   key={idx}
-                  className="bg-white rounded-2xl p-6 border border-[#DCE5EF] shadow-2xs hover:border-[#243B53]/30 transition-all duration-200"
+                  whileHover={{ y: -3 }}
+                  transition={{ duration: 0.2 }}
+                  className="bg-white rounded-2xl p-6 border border-[#DCE5EF] shadow-2xs hover:border-[#B49A70]/50 transition-all duration-200"
                 >
                   <div className="w-11 h-11 rounded-xl bg-[#EAF0F6] flex items-center justify-center text-[#243B53] mb-4">
-                    <IconComp className="w-5 h-5" />
+                    <IconComp className="w-5 h-5 text-[#B49A70]" />
                   </div>
                   <h3 className="font-heading font-bold text-base text-[#243B53] mb-2">
                     {item.title}
@@ -103,7 +106,7 @@ export function AboutSection() {
                   <p className="text-xs text-[#475569] leading-relaxed">
                     {item.description}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
           </div>

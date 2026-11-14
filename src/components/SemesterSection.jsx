@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   GraduationCap,
   BookOpen,
@@ -24,15 +25,15 @@ export function SemesterSection({
     INITIAL_PROGRAMMES.find((p) => p.id === selectedProgrammeId) ||
     INITIAL_PROGRAMMES[0];
 
-  const availableSemesters = currentProgramme.availableSemesters || [];
+  const availableSemesters = currentProgramme?.availableSemesters || [];
 
   return (
-    <section id="semesters" className="py-16 md:py-24 bg-[#EAF0F6]/50 border-t border-[#DCE5EF]">
+    <section id="semesters" className="py-16 md:py-24 bg-[#EAF0F6]/40 border-t border-[#DCE5EF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <span className="text-xs font-heading font-semibold tracking-wider text-[#475569] uppercase block mb-2">
+          <span className="text-xs font-heading font-semibold tracking-wider text-[#B49A70] uppercase block mb-2">
             Curriculum Progression
           </span>
           <h2 className="font-heading font-bold text-3xl sm:text-4xl text-[#243B53] tracking-tight">
@@ -45,7 +46,7 @@ export function SemesterSection({
           </p>
         </div>
 
-        {/* Programme Filter Tabs */}
+        {/* Programme Filter Tabs (Strict Approved Order 1 to 7) */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-10 max-w-4xl mx-auto">
           {INITIAL_PROGRAMMES.map((prog) => {
             const isSelected = prog.id === currentProgramme.id;
@@ -56,7 +57,7 @@ export function SemesterSection({
                 onClick={() => onProgrammeChange && onProgrammeChange(prog.id)}
                 className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-heading font-semibold transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-[#243B53] text-white shadow-sm ring-2 ring-[#243B53]/20'
+                    ? 'bg-[#243B53] text-white shadow-sm ring-2 ring-[#B49A70]/30'
                     : 'bg-white hover:bg-[#DCE5EF] text-[#303846] border border-[#DCE5EF]'
                 }`}
               >
@@ -76,7 +77,7 @@ export function SemesterSection({
         {/* Selected Programme Summary Banner */}
         <div className="max-w-4xl mx-auto mb-8 bg-white rounded-xl border border-[#DCE5EF] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#EAF0F6] flex items-center justify-center text-[#243B53] shrink-0 font-bold text-xs">
+            <div className="w-8 h-8 rounded-lg bg-[#EAF0F6] flex items-center justify-center text-[#243B53] shrink-0 font-bold text-xs font-heading">
               {currentProgramme.code}
             </div>
             <div>
@@ -89,7 +90,7 @@ export function SemesterSection({
             </div>
           </div>
           <div className="flex items-center gap-1.5 text-xs text-[#243B53] font-medium bg-[#EAF0F6] px-3 py-1 rounded-full border border-[#DCE5EF] shrink-0">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 text-[#B49A70]" />
             <span>College Active Batch</span>
           </div>
         </div>
@@ -106,23 +107,26 @@ export function SemesterSection({
             const IconComponent = semesterIcons[sem.semesterNumber] || BookOpen;
 
             return (
-              <div
+              <motion.div
                 key={sem.id}
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.2 }}
                 onClick={() =>
                   onSemesterSelect &&
                   onSemesterSelect({
                     ...sem,
+                    programmeId: currentProgramme.id,
                     programmeName: currentProgramme.name,
                     programmeScheme: currentProgramme.scheme,
                   })
                 }
-                className="group relative bg-white rounded-2xl p-6 border border-[#DCE5EF] shadow-2xs transition-all duration-200 hover:-translate-y-1 hover:border-[#243B53]/40 hover:shadow-md cursor-pointer flex flex-col justify-between"
+                className="group relative bg-white rounded-2xl p-6 border border-[#DCE5EF] shadow-2xs transition-all duration-200 hover:border-[#B49A70]/50 hover:shadow-md cursor-pointer flex flex-col justify-between"
               >
                 <div>
                   {/* Top: Icon + Semester Badge */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-11 h-11 rounded-xl bg-[#EAF0F6] group-hover:bg-[#DCE5EF] flex items-center justify-center text-[#243B53] transition-colors duration-200">
-                      <IconComponent className="w-5 h-5" />
+                      <IconComponent className="w-5 h-5 text-[#243B53] group-hover:text-[#B49A70] transition-colors" />
                     </div>
                     <span className="text-xs font-heading font-bold px-2.5 py-1 rounded-md bg-[#243B53] text-white tracking-wider">
                       S{sem.semesterNumber}
@@ -131,7 +135,7 @@ export function SemesterSection({
 
                   {/* Title & Degree Phase */}
                   <div className="mb-2">
-                    <span className="text-[11px] font-semibold text-[#475569] tracking-wider uppercase block">
+                    <span className="text-[11px] font-semibold text-[#B49A70] tracking-wider uppercase block">
                       {sem.phase}
                     </span>
                     <h3 className="font-heading font-bold text-xl text-[#243B53] group-hover:text-[#1A2B3C] transition-colors">
@@ -153,9 +157,9 @@ export function SemesterSection({
                 {/* Bottom Action */}
                 <div className="pt-4 border-t border-[#DCE5EF] flex items-center justify-between text-xs font-heading font-semibold text-[#243B53]">
                   <span>Explore Materials</span>
-                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 text-[#B49A70] transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
